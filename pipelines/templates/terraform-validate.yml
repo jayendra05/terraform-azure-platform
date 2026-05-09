@@ -1,0 +1,17 @@
+jobs:
+- job: TerraformValidate
+  displayName: Terraform Validate
+
+  steps:
+
+  - checkout: self
+
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: '1.5.7'
+
+  - script: |
+      cd environments/dev
+      terraform init
+      terraform validate
+    displayName: Terraform Validate

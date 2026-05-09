@@ -1,0 +1,26 @@
+jobs:
+- job: TerraformPlan
+  displayName: Terraform Plan
+
+  steps:
+
+  - checkout: self
+
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: '1.5.7'
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'azure-terraform-sc'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        cd environments/dev
+
+        terraform init
+
+        terraform plan \
+          -var="resource_group_name=rg-dev-platform-001" \
+          -var="location=Central India" \
+          -out=tfplan

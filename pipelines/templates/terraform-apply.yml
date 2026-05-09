@@ -1,0 +1,29 @@
+jobs:
+- deployment: TerraformApply
+  displayName: Terraform Apply
+
+  environment: dev
+
+  strategy:
+    runOnce:
+      deploy:
+
+        steps:
+
+        - checkout: self
+
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: '1.5.7'
+
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: 'azure-terraform-sc'
+            scriptType: bash
+            scriptLocation: inlineScript
+            inlineScript: |
+              cd environments/dev
+
+              terraform init
+
+              terraform apply -auto-approve
