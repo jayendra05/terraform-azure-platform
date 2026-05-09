@@ -1,5 +1,6 @@
 jobs:
 - deployment: TerraformApply
+
   displayName: Terraform Apply
 
   environment: dev
@@ -13,17 +14,29 @@ jobs:
         - checkout: self
 
         - task: TerraformInstaller@1
+          displayName: Install Terraform
+
           inputs:
             terraformVersion: '1.5.7'
 
         - task: AzureCLI@2
+          displayName: Terraform Apply
+
           inputs:
-            azureSubscription: 'azure-terraform-sc'
+            azureSubscription: 'Azure-git-terraform-pipeline'
             scriptType: bash
             scriptLocation: inlineScript
+
             inlineScript: |
+
+              echo "Changing directory..."
+
               cd environments/dev
 
+              echo "Running terraform init..."
+
               terraform init
+
+              echo "Applying terraform changes..."
 
               terraform apply -auto-approve

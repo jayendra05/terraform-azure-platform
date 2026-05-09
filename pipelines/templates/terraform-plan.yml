@@ -1,5 +1,6 @@
 jobs:
 - job: TerraformPlan
+
   displayName: Terraform Plan
 
   steps:
@@ -7,18 +8,30 @@ jobs:
   - checkout: self
 
   - task: TerraformInstaller@1
+    displayName: Install Terraform
+
     inputs:
       terraformVersion: '1.5.7'
 
   - task: AzureCLI@2
+    displayName: Terraform Plan
+
     inputs:
-      azureSubscription: 'azure-terraform-sc'
+      azureSubscription: 'Azure-git-terraform-pipeline'
       scriptType: bash
       scriptLocation: inlineScript
+
       inlineScript: |
+
+        echo "Changing directory..."
+
         cd environments/dev
 
+        echo "Running terraform init..."
+
         terraform init
+
+        echo "Running terraform plan..."
 
         terraform plan \
           -var="resource_group_name=rg-dev-platform-001" \

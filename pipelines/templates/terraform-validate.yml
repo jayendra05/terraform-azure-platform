@@ -1,17 +1,40 @@
 jobs:
 - job: TerraformValidate
-  displayName: Terraform Validate
+
+  displayName: Validate Terraform
 
   steps:
 
   - checkout: self
 
   - task: TerraformInstaller@1
+    displayName: Install Terraform
+
     inputs:
       terraformVersion: '1.5.7'
 
-  - script: |
-      cd environments/dev
-      terraform init
-      terraform validate
+  - task: AzureCLI@2
     displayName: Terraform Validate
+
+    inputs:
+      azureSubscription: 'Azure-git-terraform-pipeline'
+      scriptType: bash
+      scriptLocation: inlineScript
+
+      inlineScript: |
+
+        echo "Changing directory..."
+
+        cd environments/dev
+
+        echo "Running terraform init..."
+
+        terraform init
+
+        echo "Checking terraform formatting..."
+
+        terraform fmt -check
+
+        echo "Running terraform validate..."
+
+        terraform validate
