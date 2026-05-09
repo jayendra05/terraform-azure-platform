@@ -1,7 +1,6 @@
 jobs:
 - job: TerraformValidate
-
-  displayName: Validate Terraform
+  displayName: Terraform Validate
 
   steps:
 
@@ -9,12 +8,11 @@ jobs:
 
   - task: TerraformInstaller@1
     displayName: Install Terraform
-
     inputs:
       terraformVersion: '1.5.7'
 
   - task: AzureCLI@2
-    displayName: Terraform Validate
+    displayName: Run Terraform Validate
 
     inputs:
       azureSubscription: 'Azure-git-terraform-pipeline'
@@ -23,66 +21,19 @@ jobs:
       addSpnToEnvironment: true
 
       inlineScript: |
-
-        echo "==============================="
-        echo "CURRENT WORKING DIRECTORY"
-        echo "==============================="
-
         pwd
-
-        echo "==============================="
-        echo "LISTING ROOT FILES"
-        echo "==============================="
-
-        ls -la
-
-        echo "==============================="
-        echo "LISTING REPOSITORY FILES"
-        echo "==============================="
 
         ls -R
 
-        echo "==============================="
-        echo "CHANGING DIRECTORY"
-        echo "==============================="
-
         cd $(System.DefaultWorkingDirectory)/environments/dev
-
-        echo "==============================="
-        echo "CURRENT DIRECTORY"
-        echo "==============================="
-
-        pwd
-
-        echo "==============================="
-        echo "FILES INSIDE DEV"
-        echo "==============================="
-
-        ls -la
-
-        echo "==============================="
-        echo "EXPORTING ARM VARIABLES"
-        echo "==============================="
 
         export ARM_CLIENT_ID=$servicePrincipalId
         export ARM_CLIENT_SECRET=$servicePrincipalKey
         export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
         export ARM_TENANT_ID=$tenantId
 
-        echo "==============================="
-        echo "RUNNING TERRAFORM INIT"
-        echo "==============================="
-
         terraform init
 
-        echo "==============================="
-        echo "RUNNING TERRAFORM FORMAT CHECK"
-        echo "==============================="
-
         terraform fmt -check
-
-        echo "==============================="
-        echo "RUNNING TERRAFORM VALIDATE"
-        echo "==============================="
 
         terraform validate
