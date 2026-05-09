@@ -1,7 +1,11 @@
-variable "resource_group_name" {
+variable "location" {
   type = string
 }
 
-variable "location" {
+variable "platform_resource_group_name" {
+  type = string
+}
+
+variable "network_resource_group_name" {
   type = string
 }

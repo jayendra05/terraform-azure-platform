@@ -1,38 +1,17 @@
-terraform {
-  required_version = ">= 1.5.0"
-
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
-module "resource_group" {
+module "resource_group_platform" {
   source = "../../modules/resource-group"
 
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.platform_resource_group_name
   location            = var.location
 
-  tags = {
-    environment = "dev"
-    project     = "terraform-platform"
-  }
+  tags = local.common_tags
 }
 
-module "resource_group_02" {
+module "resource_group_network" {
   source = "../../modules/resource-group"
 
-  resource_group_name = "rg-dev-network-001"
-  location            = "Central India"
+  resource_group_name = var.network_resource_group_name
+  location            = var.location
 
-  tags = {
-    environment = "dev"
-    project     = "terraform-network"
-  }
+  tags = local.common_tags
 }
