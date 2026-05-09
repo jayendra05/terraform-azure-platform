@@ -20,12 +20,20 @@ jobs:
       azureSubscription: 'Azure-git-terraform-pipeline'
       scriptType: bash
       scriptLocation: inlineScript
+      addSpnToEnvironment: true
 
       inlineScript: |
 
         echo "Changing directory..."
 
-        cd environments/dev
+        cd $(System.DefaultWorkingDirectory)/environments/dev
+
+        echo "Exporting Terraform Azure authentication variables..."
+
+        export ARM_CLIENT_ID=$servicePrincipalId
+        export ARM_CLIENT_SECRET=$servicePrincipalKey
+        export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+        export ARM_TENANT_ID=$tenantId
 
         echo "Running terraform init..."
 
